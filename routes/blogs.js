@@ -1,33 +1,34 @@
 const express = require("express");
 const router = express.Router();
-const { body, validationResult } = require("express-validator");
 const Blogs = require("../models/Blogs");
 const fetchAdmin = require("../middleware/fetchAdmin");
-
+const multer = require("multer");
+const moment = require("moment");
+const fs = require("fs")
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./blog-image");
+  },
+  filename: function (req, file, cb) {
+    cb(null, moment().format("MMM Do YY") + "_" + file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
 // Endpoint to post a new blog
 router.post(
   "/blog/post",
-  [
-    body("title").isLength({ min: 15 }),
-    body("description").isLength({ min: 25 }),
-  ],
+  upload.single("blog-img"),
   fetchAdmin,
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res
-        .status(406)
-        .json({ status: 406, success: false, errors: errors.array() });
-    }
-
     try {
       const { title, description } = req.body;
       await Blogs.create({
         title,
         description,
+        img: req.file.filename,
         admin: req.admin.id,
       });
+      // console.log(req.file)
       res.json({ success: true, msg: "Blog posted successfully!" });
     } catch (error) {
       return res.status(400).json({ success: false, msg: error.message });
@@ -105,6 +106,18 @@ router.delete("/blog/delete/:id", fetchAdmin, async (req, res) => {
         msg: "You do not have the authority to delete this blog.",
       });
     } else {
+      const filePath = `./blog-image/${blog.img}`;
+      if (fs.existsSync(filePath)) {
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.error('Error deleting the file:', err);
+          } else {
+            console.log('File deleted successfully.');
+          }
+        });
+      } else {
+        console.log('File not found.');
+      }
       await Blogs.findByIdAndDelete(req.params.id);
       res.status(200).json({ success: true, msg: "Blog deleted successfully" });
     }
@@ -113,13 +126,12 @@ router.delete("/blog/delete/:id", fetchAdmin, async (req, res) => {
   }
 });
 
-
 // Endpoint to search a blog
 router.get("/blog/search", async (req, res) => {
   try {
     let query = req.query.q;
     let result = await Blogs.find({ $text: { $search: query } });
-    if (!result || result.length <= 0 ) {
+    if (!result || result.length <= 0) {
       return res.status(404).json({
         success: false,
         total: result.length,
@@ -131,7 +143,7 @@ router.get("/blog/search", async (req, res) => {
         success: true,
         total: result.length,
         query: query,
-        result
+        result,
       });
     }
   } catch (error) {
