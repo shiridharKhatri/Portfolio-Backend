@@ -12,6 +12,10 @@ const userSchema = mongoose.Schema({
     type: String,
     require: true,
   },
+  forgetPasswordCode: {
+    type: Number,
+    default: null,
+  },
   gender: {
     type: String,
     require: true,

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const moment = require("moment");
+
 function generateRandomString() {
   const numbers = "0123456789";
   const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -25,6 +26,7 @@ function generateRandomString() {
 
   return result;
 }
+
 const projectSchema = mongoose.Schema({
   admin: {
     type: mongoose.Schema.Types.ObjectId,
@@ -46,7 +48,7 @@ const projectSchema = mongoose.Schema({
     {
       id: {
         type: String,
-        default: generateRandomString().toString(),
+        default: generateRandomString(),
       },
       comment: {
         type: String,
@@ -68,6 +70,7 @@ const projectSchema = mongoose.Schema({
   image: {
     type: [String],
   },
+
   publishedOn: {
     type: String,
     default: moment().format("MMMM Do YYYY"),
@@ -77,5 +80,6 @@ const projectSchema = mongoose.Schema({
     default: moment().format("LT"),
   },
 });
-projectSchema.index({ title: "text", description: "title" });
+
+projectSchema.index({ title: "text", description: "text" });
 module.exports = mongoose.model("Projects", projectSchema);
