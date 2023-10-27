@@ -21,10 +21,13 @@ router.post(
   fetchAdmin,
   async (req, res) => {
     try {
-      const { title, description } = req.body;
+      const { title, description, color, points, conclusion } = req.body;
       await Blogs.create({
         title,
         description,
+        color,
+        points,
+        conclusion,
         img: req.file.filename,
         admin: req.admin.id,
       });
@@ -150,4 +153,17 @@ router.get("/blog/search", async (req, res) => {
     return res.status(500).json({ success: false, msg: error.message });
   }
 });
+
+router.get('/blog/fetch/:id', async(req,res)=>{
+try {
+  let blog = await Blogs.findById(req.params.id);
+  if(!blog){
+    return res.status(404).json({success:false, msg:"Blog not found or may deleted"})
+  }else{
+    return res.status(200).json({success:true, blog})
+  }
+} catch (error) {
+  return res.status(500).json({success:false,msg:error.message})
+}
+})
 module.exports = router;
