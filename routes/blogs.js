@@ -43,7 +43,6 @@ router.post(
 router.get("/blog/fetch", async (req, res) => {
   try {
     const blogs = await Blogs.find();
-
     if (!blogs) {
       return res.status(404).json({ success: false, msg: "Blogs not found" });
     } else {

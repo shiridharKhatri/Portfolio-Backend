@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
+const dotenv = require('dotenv');
+dotenv.config({path:"./config.env"});
+const url = process.env.DATABASE;
 const connectToDatabase = () => {
-  let url =
-    "mongodb+srv://khatrishiridhar:Aisha976@cluster0.xyncmbu.mongodb.net/Portfolio_data";
   mongoose
     .connect(url)
     .then(() => {

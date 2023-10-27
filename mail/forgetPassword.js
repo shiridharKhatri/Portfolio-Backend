@@ -7,13 +7,13 @@ const forgetPassword = async (email, name, token) => {
       port: 2525,
       secure: false,
       auth: {
-        user: "khatrishiridhar@gmail.com",
-        pass: "0EA690E37C1BCFB3A1BC47ABA5741BA2923A",
+        user: process.env.EMAIL,
+        pass:  process.env.PASSWORD,
       },
     });
 
     await transporter.sendMail({
-      from: "khatrishiridhar@gmail.com",
+      from: process.env.EMAIL,
       to: email,
       subject: "Reset password",
       text: ``,
