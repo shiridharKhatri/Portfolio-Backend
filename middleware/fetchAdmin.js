@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = "justasecret758%^&hjh&*";
+const JWT_SECRET = process.env.JWT_SECRET_ADMIN;
 const fetchAdmin = async (req, res, next) => {
   try {
     let token = await req.header("auth-token");

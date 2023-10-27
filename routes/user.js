@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const forgetPassword = require("../mail/forgetPassword");
 const router = express.Router();
-const JWT_SECRET = "usersecre876tcode*&dasu$&";
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Helper function to generate a random code
 const generateRandomCode = (count) => {

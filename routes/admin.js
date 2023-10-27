@@ -4,7 +4,7 @@ const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = "justasecret758%^&hjh&*";
+const JWT_SECRET = process.env.JWT_SECRET_ADMIN;
 router.post(
   "/signup",
   [
