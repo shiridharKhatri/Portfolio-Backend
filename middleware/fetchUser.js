@@ -13,7 +13,8 @@ const fetchUser = async (req, res, next) => {
         });
     } else {
       let data = await jwt.verify(token, JWT_SECRET);
-      req.user = data.data.user;
+      // console.log(data.user)
+      req.user = data.user;
     }
   } catch (error) {
     return res.status(500).json({ success: false, msg: error.message });

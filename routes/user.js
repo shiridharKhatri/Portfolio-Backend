@@ -105,6 +105,8 @@ router.post(
       res.status(200).json({
         success: true,
         msg: `Welcome back, ${user.name}`,
+        name:user.name,
+        email:user.email,
         token: token,
       });
     } catch (error) {

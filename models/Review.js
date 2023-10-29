@@ -6,11 +6,15 @@ const reviewSchema = mongoose.Schema({
         default:"Anonymous"
      },
      review:{
-        type:String
+        type:String,
+        require:true
      },
      star:{
         type:Number,
         default:0
+     },
+     img:{
+      type:String
      },
      reviewOn: {
         type: String,

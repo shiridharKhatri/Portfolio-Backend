@@ -12,6 +12,7 @@ app.use('/api/review', require('./routes/review'))
 app.use("/auth/Admin", require("./routes/admin"));
 app.use("/auth/User", require("./routes/user"));
 app.use("/blogImage", express.static("./blog-image"));
+app.use("/reviewImage", express.static("./review-image"));
 app.use("/projectImage", express.static("./project-image"));
 app.listen(PORT, () => {
   console.log("connected to port 5000");
