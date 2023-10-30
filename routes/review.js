@@ -20,11 +20,12 @@ router.post(
   fetchUser,
   async (req, res) => {
     try {
-      const { review, star } = req.body;
+      const { review, star, display_name } = req.body;
       let user = await User.findById(req.user.id);
       await Review.create({
         review,
         star,
+        display_name,
         reviewBy: user.name,
         img: req.file.filename,
       });
