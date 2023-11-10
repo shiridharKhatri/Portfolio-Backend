@@ -50,4 +50,29 @@ router.get("/fetch", async (req, res) => {
     return res.status(500).json({ success: false, msg: error.message });
   }
 });
+// Endpoint to search a blog
+router.get("/search", async (req, res) => {
+  try {
+    let query = req.query.q;
+    let result = await FreeCode.find({ $text: { $search: query } });
+    if (!result || result.length <= 0) {
+      return res.status(404).json({
+        success: false,
+        total: result.length,
+        query: query,
+        msg: "No result found",
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        total: result.length,
+        query: query,
+        result,
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({ success: false, msg: error.message });
+  }
+});
+
 module.exports = router;
