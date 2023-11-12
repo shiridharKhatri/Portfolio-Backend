@@ -4,9 +4,9 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const forgetPassword = require("../mail/forgetPassword");
+const fetchUser = require("../middleware/fetchUser");
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
-
 // Helper function to generate a random code
 const generateRandomCode = (count) => {
   let code = "";
@@ -105,8 +105,8 @@ router.post(
       res.status(200).json({
         success: true,
         msg: `Welcome back, ${user.name}`,
-        name:user.name,
-        email:user.email,
+        name: user.name,
+        email: user.email,
         token: token,
       });
     } catch (error) {
@@ -231,5 +231,24 @@ router.post(
     }
   }
 );
-
+router.get("/fetch", fetchUser, async (req, res) => {
+  try {
+    let user = await User.findById(req.user.id);
+    if (!user) {
+      res
+        .status(404)
+        .json({ success: false, msg: "User is not registered in my system" });
+    } else {
+      res.status(200).json({
+        success: true,
+        email: user.email,
+        gender: user.gender,
+        name: user.name,
+        id: user._id,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+});
 module.exports = router;
