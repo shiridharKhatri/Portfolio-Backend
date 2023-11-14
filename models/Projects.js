@@ -40,10 +40,15 @@ const projectSchema = mongoose.Schema({
     type: String,
     require: true,
   },
-  likes: {
-    type: Number,
-    default: 0,
-  },
+  likes:[
+    {
+      userId:String,
+      like:{
+        type:Number,
+        default:0
+      }
+    }
+  ],
   comments: [
     {
       id: {

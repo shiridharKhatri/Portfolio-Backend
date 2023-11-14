@@ -5,6 +5,7 @@ const router = express.Router();
 const multer = require("multer");
 const moment = require("moment");
 const fs = require("fs");
+const fetchUser = require("../middleware/fetchUser");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./project-image");
@@ -128,6 +129,42 @@ router.get("/search", async (req, res) => {
     }
   } catch (error) {
     return res.status(500).json({ success: false, msg: error.message });
+  }
+});
+router.post("/like", fetchUser, async (req, res) => {
+  try {
+    let userId = req.user.id;
+    const { productId } = req.body;
+    const project = await Projects.findById(productId);
+    if (!project) {
+      return res
+        .status(404)
+        .json({ success: false, msg: "Project not found!" });
+    } else {
+      const existingLike = project.likes.findIndex(
+        (like) => like.userId === userId
+      );
+      if (existingLike !== -1) {
+        // User has already liked the project, remove the existing like
+        project.likes.splice(existingLike, 1);
+
+        // Save the updated project document to the MongoDB collection
+        await project.save();
+
+        res.status(200).json({ success: true, msg: "Unliked successfully" });
+      } else {
+        // If not, add a new like entry
+        project.likes.push({ userId, like: 1 });
+
+        // Save the updated project document
+        await project.save();
+
+        // Respond with the updated project object
+        res.status(200).json({ success: true, msg: "Liked successfully" });
+      }
+    }
+  } catch (error) {
+    return res.status(500).json({ successa: false, msg: error.message });
   }
 });
 module.exports = router;
