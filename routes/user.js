@@ -108,6 +108,7 @@ router.post(
         name: user.name,
         email: user.email,
         token: token,
+        id:user._id
       });
     } catch (error) {
       res.status(500).json({ success: false, msg: error.message });
