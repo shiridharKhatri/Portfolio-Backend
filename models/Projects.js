@@ -56,8 +56,8 @@ const projectSchema = mongoose.Schema({
       },
       commentedBy: Object,
       commentedOn: {
-        type: String,
-        default: moment().format("MMMM Do YYYY"),
+        type: Date,
+        default: Date.now,
       },
       commentedAt: {
         type: String,
