@@ -6,6 +6,7 @@ const multer = require("multer");
 const moment = require("moment");
 const fs = require("fs");
 const fetchUser = require("../middleware/fetchUser");
+const User = require("../models/User");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./project-image");
@@ -162,6 +163,26 @@ router.post("/like", fetchUser, async (req, res) => {
         // Respond with the updated project object
         res.status(200).json({ success: true, msg: "Liked successfully" });
       }
+    }
+  } catch (error) {
+    return res.status(500).json({ successa: false, msg: error.message });
+  }
+});
+
+router.post("/comment", fetchUser, async (req, res) => {
+  try {
+    const { comment, projectId } = req.body;
+    let user = await User.findById(req.user.id).select('-password').select('-forgetPasswordCode')
+    let project = await Projects.findById(projectId);
+    if (!project) {
+      return res.status(404).json({
+        success: false,
+        msg: "Nothing found it may removed or simply doesn't exist.",
+      });
+    } else {
+      project.comments.push({ commentedBy: user, comment: comment });
+      await project.save()
+      res.status(200).json({success:true, msg:"Comment added successfully"})
     }
   } catch (error) {
     return res.status(500).json({ successa: false, msg: error.message });

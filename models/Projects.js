@@ -51,10 +51,6 @@ const projectSchema = mongoose.Schema({
   ],
   comments: [
     {
-      id: {
-        type: String,
-        default: generateRandomString(),
-      },
       comment: {
         type: String,
       },
