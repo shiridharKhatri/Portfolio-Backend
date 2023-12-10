@@ -25,9 +25,11 @@ app.use("/projectImage", express.static("./project-image"));
 app.use("/freeCodeImage", express.static("./free-code-image"));
 
 // Database Connection
-connectToDatabase();
-
-// Server Listening
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+connectToDatabase().then(() => {
+  // Server Listening
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}).catch((error)=>{
+  console.log(error);
 });
